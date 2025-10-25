@@ -16,9 +16,10 @@ namespace GameDefinition
         public const int ApplicationVersion = 1;
         public const float MoveLimit = 3f;
         public const float MoveSpeed = 2f;
-        public const float TargetPlateDistance = 0.4f;
+        public const float TargetPlateDistance = 0.5f;
         public const int HighScoreTargetProbability = 10;
         public const int DownTargetProbability = 20;
         public const int MaxProbability = 100;
+        public const float TargetMoveBaseSpeed = 0.2f;
     }
 }

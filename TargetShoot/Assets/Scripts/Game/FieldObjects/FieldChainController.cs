@@ -28,11 +28,12 @@ public class FieldChainController : MonoBehaviour
 
         for (int i = 0; i < MaxTargetCounts; i++)
         {
-            var distance = i * (1 + GameConstant.TargetPlateDistance) * Direction;
+            var distance = i * (1 + GameConstant.TargetPlateDistance) * Direction + Direction * 0.5f;
             var pos = startPosition + distance;
             var target = GenerateTargetBase();
             target.transform.position = pos;
             target.transform.SetParent(this.transform);
+            target.Init(startPosition, endPos: EndPoint.position);
         }
     }
     public bool CanInsertTarget()
