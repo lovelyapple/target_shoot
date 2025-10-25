@@ -567,7 +567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ResourceContainer
   TempNormalScoreTargetPrefab: {fileID: -2013166793937977671, guid: ec8e575b26f364686941ccd3709f35d1, type: 3}
-  "TempHighScore\xE5TargetPrefab": {fileID: 5507533921914921306, guid: 4deabd6fc54a349baaa90303b4af4ef6, type: 3}
+  TempHighScoreTargetPrefab: {fileID: 5507533921914921306, guid: 4deabd6fc54a349baaa90303b4af4ef6, type: 3}
   TempDownTargetPrefab: {fileID: 6518025854287420309, guid: e1b9e07ff6d1841a7a8d9a466b3182ad, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
