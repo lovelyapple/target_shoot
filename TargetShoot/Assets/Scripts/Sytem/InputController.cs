@@ -1,5 +1,6 @@
 using R3;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class InputController : MonoSingletoneBase<InputController>
 {
@@ -8,18 +9,22 @@ public class InputController : MonoSingletoneBase<InputController>
 
     private readonly Subject<int> _onInputMoveHorizentalSubject = new Subject<int>();
     public Observable<int> OnInputMoveHorizentalObservable() => _onInputMoveHorizentalSubject;
+    private void Awake()
+    {
+        Initialize(this);
+    }
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
         {
             _onInputFireSubject.OnNext(Unit.Default);
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow))
+        if (Keyboard.current.leftArrowKey.isPressed)
         {
             _onInputMoveHorizentalSubject.OnNext(-1);
         }
-        else if (Input.GetKey(KeyCode.RightArrow))
+        else if (Keyboard.current.rightArrowKey.isPressed)
         {
             _onInputMoveHorizentalSubject.OnNext(1);
         }
