@@ -5,12 +5,18 @@ using R3;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] Transform FirePointTransofrm;
+    [SerializeField] GameObject BulletPrefab;
     private Vector3 _moveDirection = Vector3.zero;
     private void Awake()
     {
         InputController.Instance.OnInputMoveHorizentalObservable()
         .Subscribe(x => OnInput(x))
         .AddTo(this);
+
+        InputController.Instance.OnInputFireObservable()
+        .Subscribe(_ => OnInputFire())
+        .AddTo(this);
+
     }
     private void Update()
     {
@@ -41,5 +47,11 @@ public class PlayerController : MonoBehaviour
         {
             _moveDirection = Vector3.left;
         }
+    }
+    private void OnInputFire()
+    {
+        var bullet = Instantiate(BulletPrefab);
+        bullet.gameObject.SetActive(true);
+        bullet.transform.position = FirePointTransofrm.position;
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using GameDefinition;
+using R3;
 public interface ITarget
 {
     public FieldTargetType TargetType { get; }
@@ -13,6 +14,8 @@ public abstract class TargetBase : MonoBehaviour, ITarget
     private Vector3 _startPos;
     private Vector3 _endPos;
     private float _duration;
+    private Subject<TargetBase> _onBulletHit = new Subject<TargetBase>();
+    public Observable<TargetBase> OnBulletHitObservable() => _onBulletHit;
     public void Init(Vector3 startPos, Vector3 endPos)
     {
         _startPos = startPos;
@@ -37,5 +40,10 @@ public abstract class TargetBase : MonoBehaviour, ITarget
         }
 
         transform.position = Vector3.Lerp(_startPos, _endPos, _duration);
+    }
+    public void OnHit()
+    {
+        _onBulletHit.OnNext(this);
+        _onBulletHit.OnCompleted();
     }
 }

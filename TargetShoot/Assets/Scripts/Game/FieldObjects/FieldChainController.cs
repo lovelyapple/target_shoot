@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
+using Cysharp.Threading.Tasks;
 using GameDefinition;
 using UnityEngine;
+using R3;
 
 public class FieldChainController : MonoBehaviour
 {
@@ -34,6 +37,11 @@ public class FieldChainController : MonoBehaviour
             target.transform.position = pos;
             target.transform.SetParent(this.transform);
             target.Init(startPosition, endPos: EndPoint.position);
+            RunningTargets.Add(target);
+
+            target.OnBulletHitObservable()
+            .Subscribe(target => OnBulletHit(target))
+            .AddTo(this);
         }
     }
     public bool CanInsertTarget()
@@ -56,5 +64,18 @@ public class FieldChainController : MonoBehaviour
         {
             return ResourceContainer.Instance.CreatePrefabNormalTarget();
         }
+    }
+    private void OnBulletHit(TargetBase targetBase)
+    {
+        var target = RunningTargets.FirstOrDefault(x => x == targetBase);
+
+        if (target == null)
+        {
+            Debug.LogError($"can not find target");
+            return;
+        }
+
+        RunningTargets.Remove(target);
+        Destroy(target.gameObject);
     }
 }

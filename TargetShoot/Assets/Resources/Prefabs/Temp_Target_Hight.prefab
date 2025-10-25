@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 1923005134166829699}
   - component: {fileID: 3628503385774607550}
   - component: {fileID: 5507533921914921306}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Temp_Target_Hight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -138,7 +138,7 @@ GameObject:
   - component: {fileID: 5427499185056264471}
   - component: {fileID: 1112894433817206220}
   - component: {fileID: 102126282930897635}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
