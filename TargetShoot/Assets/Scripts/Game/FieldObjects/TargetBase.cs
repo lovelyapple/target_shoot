@@ -8,4 +8,5 @@ public interface ITarget
 public abstract class TargetBase : MonoBehaviour, ITarget
 {
     public abstract FieldTargetType TargetType { get; }
+    public int Score;
 }
