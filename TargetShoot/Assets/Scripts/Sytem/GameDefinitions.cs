@@ -21,6 +21,6 @@ namespace GameDefinition
         public const int DownTargetProbability = 20;
         public const int MaxProbability = 100;
         public const float TargetMoveBaseSpeed = 0.2f;
-        public const float BulletSpeed = 2f;
+        public const float BulletSpeed = 5f;
     }
 }
