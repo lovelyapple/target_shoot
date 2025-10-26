@@ -11,7 +11,7 @@ public class BulletBase : MonoBehaviour
     {
         if (_layerMask == -1)
         {
-            _layerMask = LayerMask.NameToLayer("Target");
+            _layerMask = 1 << LayerMask.NameToLayer("Target");
         }
     }
     public void Update()
