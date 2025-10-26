@@ -76,6 +76,7 @@ public class FieldChainController : MonoBehaviour
         }
 
         RunningTargets.Remove(target);
+        MatchEventDispatcher.Instance.OnDispatchBulletHitSubject.OnNext(target);
         Destroy(target.gameObject);
     }
 }
