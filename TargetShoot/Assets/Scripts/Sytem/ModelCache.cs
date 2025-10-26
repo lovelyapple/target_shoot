@@ -17,7 +17,7 @@ public class ModelCache
         }
     }
     private MatchModel _matchModelInstance;
-    public static MatchModel MatchModel => _intanceInternal._matchModelInstance;
+    public static MatchModel Match => _intanceInternal._matchModelInstance;
     public ModelCache()
     {
         if (_intance != null)
@@ -28,5 +28,6 @@ public class ModelCache
         _intance = this;
 
         _matchModelInstance = new MatchModel();
+        _matchModelInstance.Reset();
     }
 }

@@ -18,9 +18,12 @@ public class BulletBase : MonoBehaviour
     {
         var move = Time.deltaTime * GameConstant.BulletSpeed;
 
-        var hits = Physics.RaycastAll(transform.position, Vector3.forward,
-            maxDistance: move,
-            layerMask: _layerMask);
+        var hits = Physics.RaycastAll(
+            transform.position,
+            Vector3.forward,
+            move,
+            _layerMask
+        );
 
         if (hits.Any())
         {

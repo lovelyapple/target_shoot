@@ -1,13 +1,17 @@
 using System;
 using R3;
 using UnityEngine;
-
+public class ScoreInfo
+{
+    public int AfterScore;
+    public int Diff;
+}
 public class MatchModel : IModel
 {
     public PlayerScoreInfo PlayerScore { get; private set; }
     private CompositeDisposable _dispatcherDisposable = null;
-    private Subject<int> _scoreUpdateSubject = new Subject<int>();
-    public Observable<int> ScoreUpdateObservable() => _scoreUpdateSubject;
+    private Subject<ScoreInfo> _scoreUpdateSubject = new Subject<ScoreInfo>();
+    public Observable<ScoreInfo> ScoreUpdateObservable() => _scoreUpdateSubject;
     public void Reset()
     {
         if (_dispatcherDisposable != null)
@@ -29,6 +33,13 @@ public class MatchModel : IModel
     private void OnBulletHitTarget(TargetBase targetBase)
     {
         PlayerScore.Apply(targetBase.Score);
-        _scoreUpdateSubject.OnNext(PlayerScore.CurrentScore);
+
+        var scoreInfo = new ScoreInfo()
+        {
+            Diff = targetBase.Score,
+            AfterScore = PlayerScore.CurrentScore,
+        };
+
+        _scoreUpdateSubject.OnNext(scoreInfo);
     }
 }
