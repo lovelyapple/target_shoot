@@ -48,6 +48,10 @@ public class FieldChainController : MonoBehaviour
     {
         return RunningTargets.Count < MaxTargetCounts;
     }
+    public bool RequestCreateTarget()
+    {
+
+    }
     private TargetBase GenerateTargetBase()
     {
         var res = UnityEngine.Random.Range(0, GameConstant.MaxProbability);
