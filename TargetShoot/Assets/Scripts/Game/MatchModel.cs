@@ -9,6 +9,7 @@ public class ScoreInfo
 public class MatchModel : IModel
 {
     public PlayerScoreInfo PlayerScore { get; private set; }
+    public TargetStackModel TargetStackModel { get; private set; }
     private CompositeDisposable _dispatcherDisposable = null;
     private Subject<ScoreInfo> _scoreUpdateSubject = new Subject<ScoreInfo>();
     public Observable<ScoreInfo> ScoreUpdateObservable() => _scoreUpdateSubject;
@@ -23,6 +24,7 @@ public class MatchModel : IModel
         _dispatcherDisposable = new CompositeDisposable();
         RegisterDispatcher();
         PlayerScore = new PlayerScoreInfo();
+        TargetStackModel = new TargetStackModel();
     }
     private void RegisterDispatcher()
     {
