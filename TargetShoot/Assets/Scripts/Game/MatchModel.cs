@@ -11,6 +11,7 @@ public class MatchModel : IModel
 {
     public PlayerScoreInfo PlayerScore { get; private set; }
     public TargetStackInfo TargetStackInfo { get; private set; }
+
     private CompositeDisposable _dispatcherDisposable = null;
     private Subject<ScoreInfo> _scoreUpdateSubject = new Subject<ScoreInfo>();
     public Observable<ScoreInfo> ScoreUpdateObservable() => _scoreUpdateSubject;

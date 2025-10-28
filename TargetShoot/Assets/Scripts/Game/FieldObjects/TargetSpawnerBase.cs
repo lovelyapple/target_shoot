@@ -66,7 +66,7 @@ public class TargetSpawnerBase : MonoBehaviour, ITargetSpawner
     {
         MatchEventDispatcher.Instance.OnDispatchBulletHitSubject.OnNext(targetBase);
         _target.transform.SetParent(null);
-        // Destroy(targetBase.gameObject);
+
         _target = null;
     }
     public void RequestRespawn()

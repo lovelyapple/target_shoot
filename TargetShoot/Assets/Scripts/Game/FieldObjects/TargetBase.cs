@@ -11,6 +11,7 @@ public abstract class TargetBase : MonoBehaviour, ITarget
     public abstract FieldTargetType TargetType { get; }
     public int Score;
     public int CatchStackCount;
+    public int HitCombo { get; private set; } = 0;
     public readonly Vector3 DefaultScale = new Vector3(1, 1, 0.1f);
     private Subject<TargetBase> _onBulletHit = new Subject<TargetBase>();
     public Observable<TargetBase> OnBulletHitObservable() => _onBulletHit;
@@ -27,8 +28,10 @@ public abstract class TargetBase : MonoBehaviour, ITarget
             Destroy(gameObject);
         }
     }
-    public void OnHit()
+    public void OnHit(int currentCombo)
     {
+        HitCombo = currentCombo;
+
         _onBulletHit.OnNext(this);
         _onBulletHit.OnCompleted();
 
