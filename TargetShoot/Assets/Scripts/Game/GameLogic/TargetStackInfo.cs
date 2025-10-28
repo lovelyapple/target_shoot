@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class TargetStackModel
+public class TargetStackInfo
 {
     public int CurrentPoint { get; private set; }
     public void AddPoint(int point)

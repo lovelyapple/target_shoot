@@ -10,11 +10,15 @@ public class FieldController : MonoBehaviour
     [SerializeField] FieldChainController Chain3;
     private float _targetReviveDuation;
     private List<FieldChainController> _chains = new List<FieldChainController>();
-    public void Awake()
+    private void Awake()
     {
         _chains.Add(Chain1);
         _chains.Add(Chain2);
         _chains.Add(Chain3);
+    }
+    private void Start()
+    {
+        ModelCache.Match.OnStart();
     }
     public void Update()
     {
@@ -41,6 +45,7 @@ public class FieldController : MonoBehaviour
         {
             if (chain.RevieveOne())
             {
+                ModelCache.Match.OnRespawnOneTarget();
                 return;
             }
         }

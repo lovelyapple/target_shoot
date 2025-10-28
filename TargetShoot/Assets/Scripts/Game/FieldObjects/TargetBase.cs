@@ -10,6 +10,7 @@ public abstract class TargetBase : MonoBehaviour, ITarget
 {
     public abstract FieldTargetType TargetType { get; }
     public int Score;
+    public int CatchStackCount;
     public readonly Vector3 DefaultScale = new Vector3(1, 1, 0.1f);
     private Subject<TargetBase> _onBulletHit = new Subject<TargetBase>();
     public Observable<TargetBase> OnBulletHitObservable() => _onBulletHit;
@@ -21,7 +22,7 @@ public abstract class TargetBase : MonoBehaviour, ITarget
     }
     private void Update()
     {
-        if(transform.position.y < -2)
+        if(transform.position.y < GameConstant.TargetDispearLimitHeight)
         {
             Destroy(gameObject);
         }
@@ -38,7 +39,7 @@ public abstract class TargetBase : MonoBehaviour, ITarget
     {
         if(col.transform.tag == "Backet")
         {
-            Debug.Log($"Add stack");
+            MatchEventDispatcher.Instance.OnDispatchCatchTargetSubject.OnNext(this);
         }
     }
 }

@@ -40,7 +40,7 @@ public class FieldChainController : MonoBehaviour
     }
     public bool CanInsertTarget()
     {
-        return RunningSpanwers.Any(x => x.IsEmpty);
+        return RunningSpanwers.Any(x => x.IsEmpty) && ModelCache.Match.TargetStackInfo.CurrentPoint > 0;
     }
     public bool RevieveOne()
     {

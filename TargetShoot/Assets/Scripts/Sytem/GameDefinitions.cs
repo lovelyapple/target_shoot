@@ -22,7 +22,9 @@ namespace GameDefinition
         public const int MaxProbability = 100;
         public const float TargetMoveBaseSpeed = 0.2f;
         public const float BulletSpeed = 5f;
+        public const int DefaultScore = 50;
 
+        public const float TargetDispearLimitHeight = -2f;
         public const float TargetReviveInterval = 2f;
     }
 }
