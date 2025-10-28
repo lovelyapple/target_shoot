@@ -37,6 +37,12 @@ public class FieldController : MonoBehaviour
             return;
         }
 
-        
+        foreach (var chain in chains)
+        {
+            if (chain.RevieveOne())
+            {
+                return;
+            }
+        }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using GameDefinition;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ public class FieldChainController : MonoBehaviour
     public Transform EndPoint;
 
     [Header("View Only")]
-    [SerializeField] private List<TargetSpawnerBase> RunningTargets = new();
+    [SerializeField] private List<TargetSpawnerBase> RunningSpanwers = new();
     [SerializeField] private float PointDistance = 0;
     [SerializeField] private int MaxTargetCounts = 0;
     [SerializeField] private Vector3 Direction;
@@ -34,11 +35,24 @@ public class FieldChainController : MonoBehaviour
             spawner.transform.position = pos;
             spawner.transform.SetParent(this.transform);
             spawner.Init(startPosition, endPos: EndPoint.position);
-            RunningTargets.Add(spawner);
+            RunningSpanwers.Add(spawner);
         }
     }
     public bool CanInsertTarget()
     {
-        return RunningTargets.Count < MaxTargetCounts;
+        return RunningSpanwers.Any(x => x.IsEmpty);
+    }
+    public bool RevieveOne()
+    {
+        foreach (var targetSpawner in RunningSpanwers)
+        {
+            if (targetSpawner.IsEmpty)
+            {
+                targetSpawner.RequestRespawn();
+                return true;
+            }
+        }
+
+        return false;
     }
 }

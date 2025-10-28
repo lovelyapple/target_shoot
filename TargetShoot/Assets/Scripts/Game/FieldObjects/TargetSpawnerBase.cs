@@ -16,8 +16,9 @@ public class TargetSpawnerBase : MonoBehaviour, ITargetSpawner
     public Vector3 StartPos => _startPos;
     public Vector3 EndPos => EndPos;
     public TargetBase Target => _target;
+    public bool IsEmpty => Target == null;
     private float _duration;
-
+    private bool _isRequestRespawn;
     public void Init(Vector3 startPos, Vector3 endPos)
     {
         _startPos = startPos;
@@ -41,6 +42,11 @@ public class TargetSpawnerBase : MonoBehaviour, ITargetSpawner
         if (_duration > 1)
         {
             _duration = 0;
+
+            if (_isRequestRespawn)
+            {
+                SpawnTarget();
+            }
         }
 
         transform.position = Vector3.Lerp(_startPos, _endPos, _duration);
@@ -50,6 +56,7 @@ public class TargetSpawnerBase : MonoBehaviour, ITargetSpawner
         _target = GenerateTargetBase();
         _target.transform.SetParent(this.transform);
         _target.transform.localPosition = Vector3.zero;
+        _isRequestRespawn = false;
 
         _target.OnBulletHitObservable()
         .Subscribe(target => OnBulletHit(target))
@@ -60,6 +67,10 @@ public class TargetSpawnerBase : MonoBehaviour, ITargetSpawner
         MatchEventDispatcher.Instance.OnDispatchBulletHitSubject.OnNext(targetBase);
         Destroy(targetBase.gameObject);
         _target = null;
+    }
+    public void RequestRespawn()
+    {
+        _isRequestRespawn = true;
     }
     private TargetBase GenerateTargetBase()
     {
