@@ -34,20 +34,15 @@ public class FieldController : MonoBehaviour
     }
     public void TryToFillChainWithOne()
     {
-        var chains = _chains.Where(x => x.CanInsertTarget());
+        var chains = _chains.Where(x => x.CanInsertTarget()).ToArray();
 
         if (!chains.Any())
         {
             return;
         }
 
-        foreach (var chain in chains)
-        {
-            if (chain.RevieveOne())
-            {
-                ModelCache.Match.OnRespawnOneTarget();
-                return;
-            }
-        }
+        var index = Random.Range(0, chains.Length);
+        chains[index].RevieveOne();
+        ModelCache.Match.OnRespawnOneTarget();
     }
 }
