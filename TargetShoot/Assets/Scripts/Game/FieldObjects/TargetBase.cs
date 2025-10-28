@@ -25,5 +25,6 @@ public abstract class TargetBase : MonoBehaviour, ITarget
         _onBulletHit.OnCompleted();
 
         _rigidbody.isKinematic = false;
+        gameObject.layer = LayerMask.NameToLayer("Default");
     }
 }
