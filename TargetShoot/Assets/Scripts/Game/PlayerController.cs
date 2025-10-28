@@ -53,10 +53,14 @@ public class PlayerController : MonoBehaviour
     }
     private void OnInputFire()
     {
-        var obj = Instantiate(BulletPrefab);
-        obj.gameObject.SetActive(true);
-        obj.transform.position = FirePointTransform.position;
-        var bullet = obj.GetComponent<BulletBase>();
-        bullet.Setup(_bulletMoveDierction);
+        if (ModelCache.Match.CanFire())
+        {
+            var obj = Instantiate(BulletPrefab);
+            obj.gameObject.SetActive(true);
+            obj.transform.position = FirePointTransform.position;
+            var bullet = obj.GetComponent<BulletBase>();
+            bullet.Setup(_bulletMoveDierction);
+            ModelCache.Match.OnFire();
+        }
     }
 }

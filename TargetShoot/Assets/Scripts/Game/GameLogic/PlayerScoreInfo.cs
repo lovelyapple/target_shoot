@@ -1,3 +1,4 @@
+using GameDefinition;
 using UnityEngine;
 
 public class PlayerScoreInfo
@@ -6,6 +7,10 @@ public class PlayerScoreInfo
     public void Apply(int score)
     {
         CurrentScore += score;
+    }
+    public void DecreaseOne()
+    {
+        CurrentScore -= GameConstant.FireCost;
     }
     public void Reset()
     {

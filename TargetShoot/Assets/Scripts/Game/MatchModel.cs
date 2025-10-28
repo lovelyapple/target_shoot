@@ -43,11 +43,12 @@ public class MatchModel : IModel
     }
     private void OnBulletHitTarget(TargetBase targetBase)
     {
-        PlayerScore.Apply(targetBase.Score);
+        var applyScore = targetBase.Score * targetBase.HitCombo * GameConstant.ComboBonusTimes;
+        PlayerScore.Apply(applyScore);
 
         var scoreInfo = new ScoreInfo()
         {
-            Diff = targetBase.Score * targetBase.HitCombo * GameConstant.ComboBonusTimes,
+            Diff = applyScore,
             AfterScore = PlayerScore.CurrentScore,
         };
 
@@ -72,5 +73,20 @@ public class MatchModel : IModel
         };
         _scoreUpdateSubject.OnNext(scoreInfo);
         _stackUpdateSubject.OnNext(TargetStackInfo);
+    }
+    public bool CanFire()
+    {
+        return PlayerScore.CurrentScore > 0;
+    }
+    public void OnFire()
+    {
+        PlayerScore.DecreaseOne();
+
+        var scoreInfo = new ScoreInfo()
+        {
+            Diff = -GameConstant.FireCost,
+            AfterScore = PlayerScore.CurrentScore,
+        };
+        _scoreUpdateSubject.OnNext(scoreInfo);
     }
 }
