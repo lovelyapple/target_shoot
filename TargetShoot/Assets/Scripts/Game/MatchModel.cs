@@ -47,7 +47,7 @@ public class MatchModel : IModel
 
         var scoreInfo = new ScoreInfo()
         {
-            Diff = targetBase.Score,
+            Diff = targetBase.Score * targetBase.HitCombo * GameConstant.ComboBonusTimes,
             AfterScore = PlayerScore.CurrentScore,
         };
 

@@ -26,5 +26,6 @@ namespace GameDefinition
 
         public const float TargetDispearLimitHeight = -2f;
         public const float TargetReviveInterval = 2f;
+        public const int ComboBonusTimes = 2;
     }
 }
