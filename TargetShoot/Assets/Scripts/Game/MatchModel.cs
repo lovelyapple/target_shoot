@@ -54,7 +54,7 @@ public class MatchModel : IModel
     }
     private void OnCatchFallTarget(TargetBase targetBase)
     {
-        TargetStackInfo.AddPoint(targetBase.Score);
+        TargetStackInfo.AddPoint(targetBase.CatchStackCount);
         _stackUpdateSubject.OnNext(TargetStackInfo);
     }
     public void OnRespawnOneTarget()
