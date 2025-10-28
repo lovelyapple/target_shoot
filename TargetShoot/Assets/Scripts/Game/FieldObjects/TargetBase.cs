@@ -19,6 +19,13 @@ public abstract class TargetBase : MonoBehaviour, ITarget
         _rigidbody = GetComponent<Rigidbody>();
         _rigidbody.isKinematic = true;
     }
+    private void Update()
+    {
+        if(transform.position.y < -2)
+        {
+            Destroy(gameObject);
+        }
+    }
     public void OnHit()
     {
         _onBulletHit.OnNext(this);
@@ -26,5 +33,12 @@ public abstract class TargetBase : MonoBehaviour, ITarget
 
         _rigidbody.isKinematic = false;
         gameObject.layer = LayerMask.NameToLayer("Default");
+    }
+    public void OnTriggerEnter(Collider col)
+    {
+        if(col.transform.tag == "Backet")
+        {
+            Debug.Log($"Add stack");
+        }
     }
 }
