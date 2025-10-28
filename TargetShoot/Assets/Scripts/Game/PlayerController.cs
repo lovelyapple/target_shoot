@@ -4,9 +4,11 @@ using R3;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] Transform FirePointTransofrm;
+    [SerializeField] Transform FirePointTransform;
+    [SerializeField] Transform TargetPointTransform;
     [SerializeField] GameObject BulletPrefab;
     private Vector3 _moveDirection = Vector3.zero;
+    private Vector3 _bulletMoveDierction = Vector3.zero;
     private void Awake()
     {
         InputController.Instance.OnInputMoveHorizentalObservable()
@@ -17,6 +19,7 @@ public class PlayerController : MonoBehaviour
         .Subscribe(_ => OnInputFire())
         .AddTo(this);
 
+        _bulletMoveDierction = (TargetPointTransform.position - FirePointTransform.position).normalized;
     }
     private void Update()
     {
@@ -50,8 +53,10 @@ public class PlayerController : MonoBehaviour
     }
     private void OnInputFire()
     {
-        var bullet = Instantiate(BulletPrefab);
-        bullet.gameObject.SetActive(true);
-        bullet.transform.position = FirePointTransofrm.position;
+        var obj = Instantiate(BulletPrefab);
+        obj.gameObject.SetActive(true);
+        obj.transform.position = FirePointTransform.position;
+        var bullet = obj.GetComponent<BulletBase>();
+        bullet.Setup(_bulletMoveDierction);
     }
 }

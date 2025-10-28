@@ -7,6 +7,7 @@ public class BulletBase : MonoBehaviour
 {
     private static int _layerMask = -1;
     private float _lifeTime = 3f;
+    private Vector3 _moveDirection;
     private void Awake()
     {
         if (_layerMask == -1)
@@ -14,13 +15,17 @@ public class BulletBase : MonoBehaviour
             _layerMask = 1 << LayerMask.NameToLayer("Target");
         }
     }
+    public void Setup(Vector3 moveDireciont)
+    {
+        _moveDirection = moveDireciont;
+    }
     public void Update()
     {
         var move = Time.deltaTime * GameConstant.BulletSpeed;
 
         var hits = Physics.RaycastAll(
             transform.position,
-            Vector3.forward,
+            _moveDirection,
             move,
             _layerMask
         );
@@ -48,6 +53,6 @@ public class BulletBase : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        transform.position += Vector3.forward * move;
+        transform.position += _moveDirection * move;
     }
 }
