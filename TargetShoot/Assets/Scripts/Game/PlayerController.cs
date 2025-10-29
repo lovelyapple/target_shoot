@@ -23,7 +23,7 @@ public class PlayerController : MonoBehaviour
 
         _bulletMoveDierction = (TargetPointTransform.position - FirePointTransform.position).normalized;
     }
-    public void Initialize(MatchController match)
+    public void Initialize(IMatch match)
     {
         _match = match;
     }

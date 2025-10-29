@@ -2,22 +2,8 @@ using GameDefinition;
 using UnityEngine;
 using R3;
 using System;
-public class ScoreInfo
-{
-    public int AfterScore;
-    public int Diff;
-}
-public interface IMatch
-{
-    public bool HasTargetStack { get; }
-    public bool HasResult { get; }
-    public bool CanFire();
-    public void OnFire();
-    public void OnRespawnOneTarget();
-    public void OnUpdateScoreCombo(int CurrentCombo);
-    public void OnReceiveScoreComboPoint(int score);
-}
-public class MatchController : MonoBehaviour, IMatch
+
+public class ArcadeMatchController : MonoBehaviour, IMatch
 {
     [SerializeField] FieldController Field;
     [SerializeField] PlayerController Player;
@@ -136,7 +122,13 @@ public class MatchController : MonoBehaviour, IMatch
     }
     public bool CanFire()
     {
-        return !HasResult && PlayerScore.CurrentScore > 0;
+        // サバイバルモードで0になると終わり
+        // if (ModelCache.Match.IsSurvieMode)
+        // {
+        //     return !HasResult && PlayerScore.CurrentScore > 0;
+        // }
+
+        return true;
     }
     public void OnFire()
     {
@@ -150,9 +142,7 @@ public class MatchController : MonoBehaviour, IMatch
     {
         ApplyScore(score);
     }
-    #endregion
-
-    private void ApplyScore(int score)
+    public void ApplyScore(int score)
     {
         if (HasResult)
         {
@@ -160,6 +150,12 @@ public class MatchController : MonoBehaviour, IMatch
         }
 
         PlayerScore.Apply(score);
+
+        // アーケードは0以下にはならない
+        // if (ModelCache.Match.IsArcadeMode)
+        {
+            PlayerScore.Clamp0();
+        }
 
         var scoreInfo = new ScoreInfo()
         {
@@ -169,10 +165,11 @@ public class MatchController : MonoBehaviour, IMatch
 
         MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
 
-        // 残り０なので強制終了
-        if (score < 0 && PlayerScore.CurrentScore <= 0)
-        {
-            _matchEndAt = new(0);
-        }
+        // サバイバルモードで残り０なので強制終了
+        // if (ModelCache.Match.IsSurvieMode && score < 0 && PlayerScore.CurrentScore <= 0)
+        // {
+        //     _matchEndAt = new(0);
+        // }
     }
+    #endregion
 }

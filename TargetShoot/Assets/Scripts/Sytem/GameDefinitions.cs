@@ -13,6 +13,11 @@ namespace GameDefinition
         ScoreTarget,
         CharaTarget,
     }
+    public enum GameMode
+    {
+        Survie,
+        Arcade,
+    }
     public static class GameConstant
     {
         public const int ApplicationVersion = 1;

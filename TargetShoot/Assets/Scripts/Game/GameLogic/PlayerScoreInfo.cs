@@ -1,6 +1,10 @@
 using GameDefinition;
 using UnityEngine;
-
+public class ScoreInfo
+{
+    public int AfterScore;
+    public int Diff;
+}
 public class PlayerScoreInfo
 {
     public int CurrentScore { get; private set; }
@@ -8,8 +12,11 @@ public class PlayerScoreInfo
     {
         CurrentScore += score;
     }
-    public void Reset()
+    public void Clamp0()
     {
-        CurrentScore = 0;
+        if (CurrentScore < 0)
+        {
+            CurrentScore = 0;
+        }
     }
 }
