@@ -8,7 +8,7 @@ public class BulletBase : MonoBehaviour
     private static int _layerMask = -1;
     private float _lifeTime = 3f;
     private Vector3 _moveDirection;
-    public ComboInfo ComboInfo { get; private set; }
+    public BulletComboInfo ComboInfo { get; private set; }
     private void Awake()
     {
         if (_layerMask == -1)
@@ -19,7 +19,7 @@ public class BulletBase : MonoBehaviour
     public void Setup(Vector3 moveDireciont)
     {
         _moveDirection = moveDireciont;
-        ComboInfo = new ComboInfo();
+        ComboInfo = new BulletComboInfo();
     }
     public void Update()
     {
