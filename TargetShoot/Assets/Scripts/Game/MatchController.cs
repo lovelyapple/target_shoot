@@ -90,7 +90,7 @@ public class MatchController : MonoBehaviour, IMatch
 
         // add one score combo too
         // 全部取るのは良くないから、方法を考える
-        if (targetBase.CatchStackCount > GameConstant.HighScoreTargetScore)
+        if (targetBase.IsFrameTarget)
             ScoreComboManager.AddComobo(GameConstant.ScoreComboOnCatchTargetStep);
     }
     private void StartCountDown()

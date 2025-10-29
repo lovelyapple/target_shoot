@@ -27,6 +27,7 @@ namespace GameDefinition
         public const int HighScoreTargetProbability = 10;
         public const int DownTargetProbability = 20;
         public const int MaxProbability = 100;
+        public const int FrameTargetProbability = 15;
 
         public const int MatchTime = 90;
 

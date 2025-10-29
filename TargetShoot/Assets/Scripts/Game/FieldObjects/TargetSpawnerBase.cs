@@ -56,6 +56,13 @@ public class TargetSpawnerBase : MonoBehaviour, ITargetSpawner
         _target = GenerateTargetBase();
         _target.transform.SetParent(this.transform);
         _target.transform.localPosition = Vector3.zero;
+
+        var res = Random.Range(0, GameConstant.MaxProbability);
+        if(res < GameConstant.FrameTargetProbability)
+        {
+            _target.SetAsFrameTarget();
+        }
+
         _isRequestRespawn = false;
 
         _target.OnBulletHitObservable()
@@ -75,7 +82,7 @@ public class TargetSpawnerBase : MonoBehaviour, ITargetSpawner
     }
     private TargetBase GenerateTargetBase()
     {
-        var res = UnityEngine.Random.Range(0, GameConstant.MaxProbability);
+        var res = Random.Range(0, GameConstant.MaxProbability);
 
         if (res < GameConstant.HighScoreTargetProbability)
         {
