@@ -483,7 +483,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ce92fc87b9d449dea36a67ebbc39f5d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DownTarget
-  ScoreSetting: -10
+  ScoreSetting: -50
   CatchStackCountSetting: 1
   FrameObj: {fileID: 7317590148796532567}
 --- !u!54 &-6996064784061782216
