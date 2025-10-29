@@ -8,15 +8,15 @@ public class MatchRunner : MonoBehaviour
     [SerializeField] FieldController Field;
     [SerializeField] PlayerController Player;
 
-    public PlayerScoreInfo PlayerScore { get; private set; }
-    public TargetStackInfo TargetStackInfo { get; private set; }
-    public ScoreComboManager ScoreComboManager { get; private set; }
+    private IMatch _match;
+    private bool HasResult => _match != null && _match.HasResult;
 
-    public IMatch Match { get; private set; }
+    private PlayerScoreInfo _playerScore;
+    private TargetStackInfo _targetStackInfo;
+    private ScoreComboManager _scoreComboManager;
 
     private IDisposable _countdownSubscription;
     private DateTime _matchEndAt;
-    private bool HasResult => Match != null && Match.HasResult;
     private void Awake()
     {
         MatchEventDispatcher.Instance.OnDispatchBulletHitObservable()
@@ -31,39 +31,39 @@ public class MatchRunner : MonoBehaviour
 
         MatchEventDispatcher.Instance.OnBulletMissedAllObservable()
         .Where(_ => !HasResult)
-        .Subscribe(_ => ScoreComboManager?.OnBulletMissedAll())
+        .Subscribe(_ => _scoreComboManager?.OnBulletMissedAll())
         .AddTo(this);
     }
     public void Start()
     {
         Init();
-        MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(TargetStackInfo);
-
-        ModelCache.Match.OnMatchStart();
         StartCountDown();
+        ModelCache.Match.OnMatchStart();
     }
     private void OnDestroy()
     {
-        ScoreComboManager?.FinishCountDown();
+        _scoreComboManager?.FinishCountDown();
+        _scoreComboManager = null;
+
         _countdownSubscription?.Dispose();
         _countdownSubscription = null;
     }
     public void Init()
     {
-        Match = new ArcadeMatch();
-        Match.Init(PlayerScore, TargetStackInfo);
+        _match = new ArcadeMatch();
+        _match.Init(_playerScore, _targetStackInfo);
 
-        PlayerScore = new PlayerScoreInfo();
-        TargetStackInfo = new TargetStackInfo();
+        _playerScore = new PlayerScoreInfo();
+        _targetStackInfo = new TargetStackInfo();
 
-        Field.Initialize(Match);
-        Player.Initialize(Match);
+        Field.Initialize(_match);
+        Player.Initialize(_match);
 
-        ScoreComboManager = new ScoreComboManager(Match);
+        _scoreComboManager = new ScoreComboManager(_match);
 
         // 必要なUI初期化
-        Match.ApplyScore(0);
-        PlayerScore.Apply(GameConstant.DefaultScore);
+        _match.ApplyScore(GameConstant.DefaultScore);
+        MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(_targetStackInfo);
     }
 
     public void Update()
@@ -75,16 +75,16 @@ public class MatchRunner : MonoBehaviour
     {
         var comboBonus = GameConstant.GetComboTimes(iTarget.HitCombo);
         var applyScore = (int)(iTarget.Score * comboBonus);
-        Match.ApplyScore(applyScore);
-        ScoreComboManager.AddComobo(iTarget.HitCombo);
+        _match.ApplyScore(applyScore);
+        _scoreComboManager.AddComobo(iTarget.HitCombo);
     }
     private void OnCatchFallTarget(TargetBase targetBase)
     {
-        TargetStackInfo.AddPoint(targetBase.CatchStackCount);
-        MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(TargetStackInfo);
+        _targetStackInfo.AddPoint(targetBase.CatchStackCount);
+        MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(_targetStackInfo);
 
         if (targetBase.IsFrameTarget)
-            ScoreComboManager.AddComobo(GameConstant.ScoreComboOnCatchTargetStep);
+            _scoreComboManager.AddComobo(GameConstant.ScoreComboOnCatchTargetStep);
     }
     private void StartCountDown()
     {
@@ -117,8 +117,8 @@ public class MatchRunner : MonoBehaviour
     }
     private void OnMatchEnd()
     {
-        var result = PlayerScore.CurrentScore;
-        Match.SetupResult(result);
+        var result = _playerScore.CurrentScore;
+        _match.SetupResult(result);
         _countdownSubscription?.Dispose();
         _countdownSubscription = null;
         ModelCache.Match.OnMatchFinished(result);
