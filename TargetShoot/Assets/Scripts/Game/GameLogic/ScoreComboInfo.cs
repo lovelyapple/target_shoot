@@ -17,7 +17,7 @@ public class ScoreComboInfo
     {
         CurrentCombo += 2;
     }
-    public int GetScore()
+    public int GetScoreOnTimeOut()
     {
         return CurrentCombo * 5;
     }
