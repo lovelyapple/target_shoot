@@ -13,4 +13,7 @@ public class MatchEventDispatcher : SingletonBase<MatchEventDispatcher>
     public Observable<ScoreInfo> ScoreUpdateObservable() => ScoreUpdateSubject;
     public Subject<TargetStackInfo> StackUpdateSubject = new Subject<TargetStackInfo>();
     public Observable<TargetStackInfo> StackUpdateObservable() => StackUpdateSubject;
+
+    public Subject<int> OnScoreComboUpdateSubject = new Subject<int>();
+    public Subject<int> OnScoreComboUpdateObservable() => OnScoreComboUpdateSubject;
 }

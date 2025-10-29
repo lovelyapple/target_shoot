@@ -54,9 +54,9 @@ public class MatchController : MonoBehaviour, IMatch
     {
         Field.OnUpdate();
     }
-    private void OnBulletHitTarget(ITarget targetBase)
+    private void OnBulletHitTarget(ITarget iTarget)
     {
-        var applyScore = targetBase.Score * targetBase.HitCombo * GameConstant.BulletComboBonusScoreTimes;
+        var applyScore = iTarget.Score * iTarget.HitCombo * GameConstant.BulletComboBonusScoreTimes;
         PlayerScore.Apply(applyScore);
 
         var scoreInfo = new ScoreInfo()
@@ -66,6 +66,7 @@ public class MatchController : MonoBehaviour, IMatch
         };
 
         MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
+        ScoreComboManager.AddComobo(iTarget.HitCombo);
     }
     private void OnCatchFallTarget(TargetBase targetBase)
     {
@@ -97,7 +98,7 @@ public class MatchController : MonoBehaviour, IMatch
     }
     public void OnUpdateScoreCombo(int CurrentCombo)
     {
-
+        MatchEventDispatcher.Instance.OnScoreComboUpdateSubject.OnNext(CurrentCombo);
     }
     #endregion
 }
