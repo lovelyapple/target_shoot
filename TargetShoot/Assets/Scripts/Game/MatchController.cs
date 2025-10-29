@@ -28,8 +28,8 @@ public class MatchController : MonoBehaviour, IMatch
 
     private IDisposable _countdownSubscription;
     private DateTime _matchEndAt;
-    private long _matchResult = -1;
-    public bool HasResult => _matchResult >= 0;
+    private long? _matchResult = null;
+    public bool HasResult => _matchResult.HasValue;
     private void Awake()
     {
         PlayerScore = new PlayerScoreInfo();
@@ -67,7 +67,7 @@ public class MatchController : MonoBehaviour, IMatch
         ApplyScore(0);
         MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(TargetStackInfo);
 
-        _matchResult = -1;
+        _matchResult = null;
         ModelCache.Match.OnMatchStart();
         StartCountDown();
     }
@@ -120,7 +120,7 @@ public class MatchController : MonoBehaviour, IMatch
         _matchResult = PlayerScore.CurrentScore;
         _countdownSubscription?.Dispose();
         _countdownSubscription = null;
-        ModelCache.Match.OnMatchFinished(_matchResult);
+        ModelCache.Match.OnMatchFinished(_matchResult.Value);
     }
     #region IMatchの公開機能
     public bool HasTargetStack => TargetStackInfo != null && TargetStackInfo.CurrentPoint > 0;
