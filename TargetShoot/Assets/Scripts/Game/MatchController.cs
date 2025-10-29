@@ -88,8 +88,6 @@ public class MatchController : MonoBehaviour, IMatch
         TargetStackInfo.AddPoint(targetBase.CatchStackCount);
         MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(TargetStackInfo);
 
-        // add one score combo too
-        // 全部取るのは良くないから、方法を考える
         if (targetBase.IsFrameTarget)
             ScoreComboManager.AddComobo(GameConstant.ScoreComboOnCatchTargetStep);
     }
