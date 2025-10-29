@@ -62,7 +62,7 @@ public class TargetSpawnerBase : MonoBehaviour, ITargetSpawner
         .Subscribe(target => OnBulletHit(target))
         .AddTo(this);
     }
-    private void OnBulletHit(TargetBase targetBase)
+    private void OnBulletHit(ITarget targetBase)
     {
         MatchEventDispatcher.Instance.OnDispatchBulletHitSubject.OnNext(targetBase);
         _target.transform.SetParent(null);

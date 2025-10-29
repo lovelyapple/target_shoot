@@ -54,7 +54,7 @@ public class MatchController : MonoBehaviour, IMatch
     {
         Field.OnUpdate();
     }
-    private void OnBulletHitTarget(TargetBase targetBase)
+    private void OnBulletHitTarget(ITarget targetBase)
     {
         var applyScore = targetBase.Score * targetBase.HitCombo * GameConstant.BulletComboBonusScoreTimes;
         PlayerScore.Apply(applyScore);

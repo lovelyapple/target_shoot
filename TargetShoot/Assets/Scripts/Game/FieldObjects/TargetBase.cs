@@ -4,17 +4,23 @@ using R3;
 public interface ITarget
 {
     public FieldTargetType TargetType { get; }
+    public int Score { get; }
+    public int CatchStackCount { get; }
+    public int HitCombo { get; }
 }
 
 public abstract class TargetBase : MonoBehaviour, ITarget
 {
+    [Tooltip("Setting")]
+    [SerializeField] int ScoreSetting;
+    [SerializeField] int CatchStackCountSetting;
     public abstract FieldTargetType TargetType { get; }
-    public int Score;
-    public int CatchStackCount;
+    public int Score => ScoreSetting;
+    public int CatchStackCount => CatchStackCountSetting;
     public int HitCombo { get; private set; } = 0;
     public readonly Vector3 DefaultScale = new Vector3(1, 1, 0.1f);
-    private Subject<TargetBase> _onBulletHit = new Subject<TargetBase>();
-    public Observable<TargetBase> OnBulletHitObservable() => _onBulletHit;
+    private Subject<ITarget> _onBulletHit = new Subject<ITarget>();
+    public Observable<ITarget> OnBulletHitObservable() => _onBulletHit;
     private Rigidbody _rigidbody;
     private void Awake()
     {
@@ -23,7 +29,7 @@ public abstract class TargetBase : MonoBehaviour, ITarget
     }
     private void Update()
     {
-        if(transform.position.y < GameConstant.TargetDispearLimitHeight)
+        if (transform.position.y < GameConstant.TargetDispearLimitHeight)
         {
             Destroy(gameObject);
         }
@@ -40,7 +46,7 @@ public abstract class TargetBase : MonoBehaviour, ITarget
     }
     public void OnTriggerEnter(Collider col)
     {
-        if(col.transform.tag == "Backet")
+        if (col.transform.tag == "Backet")
         {
             MatchEventDispatcher.Instance.OnDispatchCatchTargetSubject.OnNext(this);
         }
