@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] GameObject BulletPrefab;
     private Vector3 _moveDirection = Vector3.zero;
     private Vector3 _bulletMoveDierction = Vector3.zero;
+
+    MatchController _match;
     private void Awake()
     {
         InputController.Instance.OnInputMoveHorizentalObservable()
@@ -20,6 +22,10 @@ public class PlayerController : MonoBehaviour
         .AddTo(this);
 
         _bulletMoveDierction = (TargetPointTransform.position - FirePointTransform.position).normalized;
+    }
+    public void Initialize(MatchController match)
+    {
+        _match = match;
     }
     private void Update()
     {
@@ -53,14 +59,14 @@ public class PlayerController : MonoBehaviour
     }
     private void OnInputFire()
     {
-        if (ModelCache.Match.CanFire())
+        if (_match.CanFire())
         {
             var obj = Instantiate(BulletPrefab);
             obj.gameObject.SetActive(true);
             obj.transform.position = FirePointTransform.position;
             var bullet = obj.GetComponent<BulletBase>();
             bullet.Setup(_bulletMoveDierction);
-            ModelCache.Match.OnFire();
+            _match.OnFire();
         }
     }
 }

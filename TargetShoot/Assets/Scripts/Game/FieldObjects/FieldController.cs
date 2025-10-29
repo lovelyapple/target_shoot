@@ -16,15 +16,11 @@ public class FieldController : MonoBehaviour
         _chains.Add(Chain2);
         _chains.Add(Chain3);
     }
-    private void Start()
-    {
-        ModelCache.Match.OnStart();
-    }
-    public void Update()
+    public void OnUpdate(MatchController match)
     {
         if (_targetReviveDuation > 0)
         {
-            if (ModelCache.Match.HasTargetStack)
+            if (match.HasTargetStack)
             {
                 _targetReviveDuation -= Time.deltaTime;
             }
@@ -35,13 +31,13 @@ public class FieldController : MonoBehaviour
         }
         else
         {
-            TryToFillChainWithOne();
+            TryToFillChainWithOne(match);
             _targetReviveDuation += GameConstant.TargetReviveInterval;
         }
     }
-    public void TryToFillChainWithOne()
+    public void TryToFillChainWithOne(MatchController match)
     {
-        if (!ModelCache.Match.HasTargetStack)
+        if (!match.HasTargetStack)
         {
             return;
         }
@@ -55,6 +51,6 @@ public class FieldController : MonoBehaviour
 
         var index = Random.Range(0, chains.Length);
         chains[index].RevieveOne();
-        ModelCache.Match.OnRespawnOneTarget();
+        match.OnRespawnOneTarget();
     }
 }

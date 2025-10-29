@@ -6,7 +6,7 @@ public class MatchUI : MonoBehaviour
 
     private void Awake()
     {
-        ModelCache.Match.ScoreUpdateObservable()
+        MatchEventDispatcher.Instance.ScoreUpdateObservable()
         .Subscribe(ApplyScore)
         .AddTo(this);
     }

@@ -6,7 +6,7 @@ public class UITargetStackView : MonoBehaviour
     [SerializeField] TextMeshProUGUI TextStackCount;
     private void Awake()
     {
-        ModelCache.Match.StackUpdateObservable()
+        MatchEventDispatcher.Instance.StackUpdateObservable()
         .Subscribe(UpdateStack)
         .AddTo(this);
     }

@@ -1754,7 +1754,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8b12708a62bd488b8626d647ae5deec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MatchController
-  FieldController: {fileID: 854363882}
+  Field: {fileID: 854363882}
+  Player: {fileID: 2006361222}
 --- !u!1 &497456690
 GameObject:
   m_ObjectHideFlags: 0
