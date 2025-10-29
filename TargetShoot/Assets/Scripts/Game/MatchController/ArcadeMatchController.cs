@@ -15,7 +15,7 @@ public class ArcadeMatchController : MonoBehaviour, IMatch
     private IDisposable _countdownSubscription;
     private DateTime _matchEndAt;
     private long? _matchResult = null;
-    public bool HasResult => _matchResult.HasValue;
+
     private void Awake()
     {
         PlayerScore = new PlayerScoreInfo();
@@ -114,6 +114,7 @@ public class ArcadeMatchController : MonoBehaviour, IMatch
         ModelCache.Match.OnMatchFinished(_matchResult.Value);
     }
     #region IMatchの公開機能
+    public bool HasResult => _matchResult.HasValue;
     public bool HasTargetStack => TargetStackInfo != null && TargetStackInfo.CurrentPoint > 0;
     public void OnRespawnOneTarget()
     {
