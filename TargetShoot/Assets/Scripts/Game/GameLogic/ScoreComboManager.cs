@@ -56,6 +56,7 @@ public class ScoreComboManager
     }
     private void ComboTimeOut()
     {
+        _match.OnReceiveScoreComboPoint(ScoreCombo.GetScore());
         ScoreCombo.OnReset();
         _match.OnUpdateScoreCombo(ScoreCombo.CurrentCombo);
         FinishCountDown();

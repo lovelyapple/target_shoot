@@ -9,6 +9,7 @@ public interface IMatch
     public void OnFire();
     public void OnRespawnOneTarget();
     public void OnUpdateScoreCombo(int CurrentCombo);
+    public void OnReceiveScoreComboPoint(int score);
 }
 public class MatchController : MonoBehaviour, IMatch
 {
@@ -103,6 +104,18 @@ public class MatchController : MonoBehaviour, IMatch
     public void OnUpdateScoreCombo(int CurrentCombo)
     {
         MatchEventDispatcher.Instance.OnScoreComboUpdateSubject.OnNext(CurrentCombo);
+    }
+    public void OnReceiveScoreComboPoint(int score)
+    {
+        PlayerScore.Apply(score);
+
+        var scoreInfo = new ScoreInfo()
+        {
+            Diff = score,
+            AfterScore = PlayerScore.CurrentScore,
+        };
+
+        MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
     }
     #endregion
 }
