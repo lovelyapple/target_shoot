@@ -20,7 +20,6 @@ public class MatchRunner : MonoBehaviour
     private void Awake()
     {
         PlayerScore = new PlayerScoreInfo();
-        PlayerScore.Apply(GameConstant.DefaultScore);
         TargetStackInfo = new TargetStackInfo();
 
         MatchEventDispatcher.Instance.OnDispatchBulletHitObservable()
@@ -37,19 +36,35 @@ public class MatchRunner : MonoBehaviour
         .Where(_ => !Match.HasResult)
         .Subscribe(_ => ScoreComboManager?.OnBulletMissedAll())
         .AddTo(this);
-
-        Field.Initialize(Match);
-        Player.Initialize(Match);
-        ScoreComboManager = new ScoreComboManager(Match);
     }
+    public void Start()
+    {
+        Init();
+        MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(TargetStackInfo);
 
+        ModelCache.Match.OnMatchStart();
+        StartCountDown();
+    }
     private void OnDestroy()
     {
         ScoreComboManager?.FinishCountDown();
-
         _countdownSubscription?.Dispose();
         _countdownSubscription = null;
     }
+    public void Init()
+    {
+        Match = new ArcadeMatch();
+        Match.Init(PlayerScore, TargetStackInfo);
+
+        Field.Initialize(Match);
+        Player.Initialize(Match);
+
+        ScoreComboManager = new ScoreComboManager(Match);
+
+        Match.ApplyScore(0);
+        PlayerScore.Apply(GameConstant.DefaultScore);
+    }
+
     public void Update()
     {
         if (!Match.HasResult)
@@ -101,9 +116,10 @@ public class MatchRunner : MonoBehaviour
     }
     private void OnMatchEnd()
     {
-        _matchResult = PlayerScore.CurrentScore;
+        var result = PlayerScore.CurrentScore;
+        Match.SetupResult(result);
         _countdownSubscription?.Dispose();
         _countdownSubscription = null;
-        ModelCache.Match.OnMatchFinished(_matchResult.Value);
+        ModelCache.Match.OnMatchFinished(result);
     }
 }
