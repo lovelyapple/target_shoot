@@ -215,8 +215,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c734dcbd4d6a1498493e7e57ef836d13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreTarget
-  Score: 3
-  CatchStackCount: 1
+  ScoreSetting: 1
+  CatchStackCountSetting: 1
 --- !u!54 &-4148228769013980870
 Rigidbody:
   m_ObjectHideFlags: 0

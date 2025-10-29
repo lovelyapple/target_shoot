@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 5507533921914921306}
   - component: {fileID: -6305478365683171115}
   m_Layer: 6
-  m_Name: Temp_Target_Hight
+  m_Name: Temp_Target_High
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -126,8 +126,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c734dcbd4d6a1498493e7e57ef836d13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreTarget
-  Score: 5
-  CatchStackCount: 3
+  ScoreSetting: 5
+  CatchStackCountSetting: 3
 --- !u!54 &-6305478365683171115
 Rigidbody:
   m_ObjectHideFlags: 0
