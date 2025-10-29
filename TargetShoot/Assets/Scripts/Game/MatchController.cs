@@ -131,7 +131,7 @@ public class MatchController : MonoBehaviour, IMatch
     }
     public bool CanFire()
     {
-        return PlayerScore.CurrentScore > 0;
+        return !HasResult && PlayerScore.CurrentScore > 0;
     }
     public void OnFire()
     {
@@ -163,5 +163,11 @@ public class MatchController : MonoBehaviour, IMatch
         };
 
         MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
+
+        // 残り０なので強制終了
+        if (score < 0 && PlayerScore.CurrentScore <= 0)
+        {
+            _matchEndAt = new(0);
+        }
     }
 }
