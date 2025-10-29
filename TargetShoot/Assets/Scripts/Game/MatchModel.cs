@@ -11,6 +11,7 @@ public class MatchModel : IModel
 {
     public PlayerScoreInfo PlayerScore { get; private set; }
     public TargetStackInfo TargetStackInfo { get; private set; }
+    public bool HasTargetStack => TargetStackInfo != null && TargetStackInfo.CurrentPoint > 0;
 
     private CompositeDisposable _dispatcherDisposable = null;
     private Subject<ScoreInfo> _scoreUpdateSubject = new Subject<ScoreInfo>();

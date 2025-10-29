@@ -24,7 +24,14 @@ public class FieldController : MonoBehaviour
     {
         if (_targetReviveDuation > 0)
         {
-            _targetReviveDuation -= Time.deltaTime;
+            if (ModelCache.Match.HasTargetStack)
+            {
+                _targetReviveDuation -= Time.deltaTime;
+            }
+            else if (_targetReviveDuation != GameConstant.TargetReviveInterval)
+            {
+                _targetReviveDuation = GameConstant.TargetReviveInterval;
+            }
         }
         else
         {
@@ -34,6 +41,11 @@ public class FieldController : MonoBehaviour
     }
     public void TryToFillChainWithOne()
     {
+        if (!ModelCache.Match.HasTargetStack)
+        {
+            return;
+        }
+
         var chains = _chains.Where(x => x.CanInsertTarget()).ToArray();
 
         if (!chains.Any())
