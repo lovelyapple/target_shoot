@@ -32,11 +32,15 @@ public class MatchController : MonoBehaviour, IMatch
         .Subscribe(target => OnCatchFallTarget(target))
         .AddTo(this);
 
+        MatchEventDispatcher.Instance.OnBulletMissedAllObservable()
+        .Subscribe(_ => ScoreComboManager?.OnBulletMissedAll())
+        .AddTo(this);
+
         Field.Initialize(this);
         Player.Initialize(this);
         ScoreComboManager = new ScoreComboManager(this);
     }
-    private void Oestroy()
+    private void OnDestroy()
     {
         ScoreComboManager?.FinishCountDown();
     }

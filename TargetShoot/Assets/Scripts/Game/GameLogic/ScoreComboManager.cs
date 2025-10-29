@@ -12,6 +12,7 @@ public class ScoreComboManager
     public ScoreComboManager(IMatch match)
     {
         ScoreCombo = new ScoreComboInfo();
+        _match = match;
     }
     public void AddComobo(int hitStep)
     {
@@ -58,6 +59,10 @@ public class ScoreComboManager
         ScoreCombo.OnReset();
         _match.OnUpdateScoreCombo(ScoreCombo.CurrentCombo);
         FinishCountDown();
+    }
+    public void OnBulletMissedAll()
+    {
+        ComboEndAt = new(0);
     }
     public void FinishCountDown()
     {

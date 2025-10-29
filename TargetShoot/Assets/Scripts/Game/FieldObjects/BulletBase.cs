@@ -2,6 +2,7 @@ using System.Linq;
 using GameDefinition;
 using R3;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BulletBase : MonoBehaviour
 {
@@ -52,6 +53,11 @@ public class BulletBase : MonoBehaviour
 
         if (_lifeTime <= 0)
         {
+            if (ComboInfo.CurrentCombo == 0)
+            {
+                MatchEventDispatcher.Instance.OnBulletMissedAllSubject.OnNext(Unit.Default);
+            }
+
             Destroy(this.gameObject);
         }
 
