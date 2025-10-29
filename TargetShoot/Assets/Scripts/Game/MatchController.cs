@@ -4,10 +4,11 @@ using R3;
 
 public interface IMatch
 {
+    public bool HasTargetStack { get; }
     public bool CanFire();
     public void OnFire();
     public void OnRespawnOneTarget();
-    public bool HasTargetStack { get; }
+    public void OnUpdateScoreCombo(int CurrentCombo);
 }
 public class MatchController : MonoBehaviour, IMatch
 {
@@ -19,8 +20,6 @@ public class MatchController : MonoBehaviour, IMatch
     public ScoreComboManager ScoreComboManager { get; private set; }
     private void Awake()
     {
-        ScoreComboManager = new ScoreComboManager();
-
         PlayerScore = new PlayerScoreInfo();
         PlayerScore.Apply(GameConstant.DefaultScore);
         TargetStackInfo = new TargetStackInfo();
@@ -35,6 +34,11 @@ public class MatchController : MonoBehaviour, IMatch
 
         Field.Initialize(this);
         Player.Initialize(this);
+        ScoreComboManager = new ScoreComboManager(this);
+    }
+    private void Oestroy()
+    {
+        ScoreComboManager?.FinishCountDown();
     }
     public void OnStart()
     {
@@ -52,7 +56,7 @@ public class MatchController : MonoBehaviour, IMatch
     }
     private void OnBulletHitTarget(TargetBase targetBase)
     {
-        var applyScore = targetBase.Score * targetBase.HitCombo * GameConstant.ComboBonusTimes;
+        var applyScore = targetBase.Score * targetBase.HitCombo * GameConstant.BulletComboBonusScoreTimes;
         PlayerScore.Apply(applyScore);
 
         var scoreInfo = new ScoreInfo()
@@ -90,6 +94,10 @@ public class MatchController : MonoBehaviour, IMatch
         };
 
         MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
+    }
+    public void OnUpdateScoreCombo(int CurrentCombo)
+    {
+
     }
     #endregion
 }
