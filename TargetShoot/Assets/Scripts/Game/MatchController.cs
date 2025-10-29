@@ -77,7 +77,8 @@ public class MatchController : MonoBehaviour, IMatch
     }
     private void OnBulletHitTarget(ITarget iTarget)
     {
-        var applyScore = iTarget.Score * iTarget.HitCombo * GameConstant.BulletComboBonusScoreTimes;
+        var comboBonus = iTarget.HitCombo > 1 ? (iTarget.HitCombo - 1) * GameConstant.BulletComboBonusScoreTimes : 1;
+        var applyScore = iTarget.Score * comboBonus;
         ApplyScore(applyScore);
         ScoreComboManager.AddComobo(iTarget.HitCombo);
     }
