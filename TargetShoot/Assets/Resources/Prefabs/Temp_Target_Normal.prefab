@@ -216,7 +216,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreTarget
   ScoreSetting: 1
-  CatchStackCountSetting: 1
+  CatchStackCountSetting: 2
 --- !u!54 &-4148228769013980870
 Rigidbody:
   m_ObjectHideFlags: 0
