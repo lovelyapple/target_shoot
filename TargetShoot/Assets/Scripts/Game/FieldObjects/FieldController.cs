@@ -10,17 +10,22 @@ public class FieldController : MonoBehaviour
     [SerializeField] FieldChainController Chain3;
     private float _targetReviveDuation;
     private List<FieldChainController> _chains = new List<FieldChainController>();
+    private IMatch _match;
     private void Awake()
     {
         _chains.Add(Chain1);
         _chains.Add(Chain2);
         _chains.Add(Chain3);
     }
-    public void OnUpdate(MatchController match)
+    public void Initialize(IMatch match)
+    {
+        _match = match;
+    }
+    public void OnUpdate()
     {
         if (_targetReviveDuation > 0)
         {
-            if (match.HasTargetStack)
+            if (_match.HasTargetStack)
             {
                 _targetReviveDuation -= Time.deltaTime;
             }
@@ -31,13 +36,13 @@ public class FieldController : MonoBehaviour
         }
         else
         {
-            TryToFillChainWithOne(match);
+            TryToFillChainWithOne();
             _targetReviveDuation += GameConstant.TargetReviveInterval;
         }
     }
-    public void TryToFillChainWithOne(MatchController match)
+    public void TryToFillChainWithOne()
     {
-        if (!match.HasTargetStack)
+        if (!_match.HasTargetStack)
         {
             return;
         }
@@ -51,6 +56,6 @@ public class FieldController : MonoBehaviour
 
         var index = Random.Range(0, chains.Length);
         chains[index].RevieveOne();
-        match.OnRespawnOneTarget();
+        _match.OnRespawnOneTarget();
     }
 }

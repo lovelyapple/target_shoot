@@ -2,7 +2,14 @@ using GameDefinition;
 using UnityEngine;
 using R3;
 
-public class MatchController : MonoBehaviour
+public interface IMatch
+{
+    public bool CanFire();
+    public void OnFire();
+    public void OnRespawnOneTarget();
+    public bool HasTargetStack { get; }
+}
+public class MatchController : MonoBehaviour, IMatch
 {
     [SerializeField] FieldController Field;
     [SerializeField] PlayerController Player;
@@ -10,8 +17,6 @@ public class MatchController : MonoBehaviour
     public PlayerScoreInfo PlayerScore { get; private set; }
     public TargetStackInfo TargetStackInfo { get; private set; }
     public ScoreComboManager ScoreComboManager { get; private set; }
-
-    public bool HasTargetStack => TargetStackInfo != null && TargetStackInfo.CurrentPoint > 0;
     private void Awake()
     {
         ScoreComboManager = new ScoreComboManager();
@@ -28,6 +33,7 @@ public class MatchController : MonoBehaviour
         .Subscribe(target => OnCatchFallTarget(target))
         .AddTo(this);
 
+        Field.Initialize(this);
         Player.Initialize(this);
     }
     public void OnStart()
@@ -42,7 +48,7 @@ public class MatchController : MonoBehaviour
     }
     public void Update()
     {
-        Field.OnUpdate(this);
+        Field.OnUpdate();
     }
     private void OnBulletHitTarget(TargetBase targetBase)
     {
@@ -62,6 +68,8 @@ public class MatchController : MonoBehaviour
         TargetStackInfo.AddPoint(targetBase.CatchStackCount);
         MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(TargetStackInfo);
     }
+    #region IMatchの公開機能
+    public bool HasTargetStack => TargetStackInfo != null && TargetStackInfo.CurrentPoint > 0;
     public void OnRespawnOneTarget()
     {
         TargetStackInfo.UseOne();
@@ -83,4 +91,5 @@ public class MatchController : MonoBehaviour
 
         MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
     }
+    #endregion
 }

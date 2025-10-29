@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _moveDirection = Vector3.zero;
     private Vector3 _bulletMoveDierction = Vector3.zero;
 
-    MatchController _match;
+    IMatch _match;
     private void Awake()
     {
         InputController.Instance.OnInputMoveHorizentalObservable()
