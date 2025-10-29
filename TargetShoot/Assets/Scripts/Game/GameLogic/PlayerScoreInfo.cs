@@ -8,10 +8,6 @@ public class PlayerScoreInfo
     {
         CurrentScore += score;
     }
-    public void DecreaseOne()
-    {
-        CurrentScore -= GameConstant.FireCost;
-    }
     public void Reset()
     {
         CurrentScore = 0;

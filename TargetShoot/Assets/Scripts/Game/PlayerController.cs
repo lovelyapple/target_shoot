@@ -29,6 +29,11 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        if (_match == null || _match.HasResult)
+        {
+            return;
+        }
+
         if (_moveDirection == Vector3.zero)
         {
             return;

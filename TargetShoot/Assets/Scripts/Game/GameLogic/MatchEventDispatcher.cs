@@ -18,4 +18,7 @@ public class MatchEventDispatcher : SingletonBase<MatchEventDispatcher>
     public Subject<int> OnScoreComboUpdateObservable() => OnScoreComboUpdateSubject;
     public Subject<Unit> OnBulletMissedAllSubject = new Subject<Unit>();
     public Subject<Unit> OnBulletMissedAllObservable() => OnBulletMissedAllSubject;
+
+    public Subject<int> OnUpdateTimeLeftSubject = new Subject<int>();
+    public Observable<int> OnUpdateTimeLeftObservable() => OnUpdateTimeLeftSubject;
 }

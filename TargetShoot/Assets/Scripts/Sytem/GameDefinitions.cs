@@ -28,6 +28,8 @@ namespace GameDefinition
         public const int DownTargetProbability = 20;
         public const int MaxProbability = 100;
 
+        public const int MatchTime = 90;
+
         // スコアー関連
         public const int FireCost = 1;
         public const int DefaultScore = 50;

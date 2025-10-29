@@ -1,10 +1,16 @@
 using GameDefinition;
 using UnityEngine;
 using R3;
-
+using System;
+public class ScoreInfo
+{
+    public int AfterScore;
+    public int Diff;
+}
 public interface IMatch
 {
     public bool HasTargetStack { get; }
+    public bool HasResult { get; }
     public bool CanFire();
     public void OnFire();
     public void OnRespawnOneTarget();
@@ -19,6 +25,11 @@ public class MatchController : MonoBehaviour, IMatch
     public PlayerScoreInfo PlayerScore { get; private set; }
     public TargetStackInfo TargetStackInfo { get; private set; }
     public ScoreComboManager ScoreComboManager { get; private set; }
+
+    private IDisposable _countdownSubscription;
+    private DateTime _matchEndAt;
+    private long _matchResult = -1;
+    public bool HasResult => _matchResult >= 0;
     private void Awake()
     {
         PlayerScore = new PlayerScoreInfo();
@@ -26,14 +37,17 @@ public class MatchController : MonoBehaviour, IMatch
         TargetStackInfo = new TargetStackInfo();
 
         MatchEventDispatcher.Instance.OnDispatchBulletHitObservable()
+        .Where(_ => !HasResult)
         .Subscribe(target => OnBulletHitTarget(target))
         .AddTo(this);
 
         MatchEventDispatcher.Instance.OnDispatchCatchTargetObservable()
+        .Where(_ => !HasResult)
         .Subscribe(target => OnCatchFallTarget(target))
         .AddTo(this);
 
         MatchEventDispatcher.Instance.OnBulletMissedAllObservable()
+        .Where(_ => !HasResult)
         .Subscribe(_ => ScoreComboManager?.OnBulletMissedAll())
         .AddTo(this);
 
@@ -44,16 +58,18 @@ public class MatchController : MonoBehaviour, IMatch
     private void OnDestroy()
     {
         ScoreComboManager?.FinishCountDown();
+
+        _countdownSubscription?.Dispose();
+        _countdownSubscription = null;
     }
-    public void OnStart()
+    public void Start()
     {
-        var scoreInfo = new ScoreInfo()
-        {
-            Diff = PlayerScore.CurrentScore,
-            AfterScore = PlayerScore.CurrentScore,
-        };
-        MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
+        ApplyScore(0);
         MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(TargetStackInfo);
+
+        _matchResult = -1;
+        ModelCache.Match.OnMatchStart();
+        StartCountDown();
     }
     public void Update()
     {
@@ -62,21 +78,49 @@ public class MatchController : MonoBehaviour, IMatch
     private void OnBulletHitTarget(ITarget iTarget)
     {
         var applyScore = iTarget.Score * iTarget.HitCombo * GameConstant.BulletComboBonusScoreTimes;
-        PlayerScore.Apply(applyScore);
-
-        var scoreInfo = new ScoreInfo()
-        {
-            Diff = applyScore,
-            AfterScore = PlayerScore.CurrentScore,
-        };
-
-        MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
+        ApplyScore(applyScore);
         ScoreComboManager.AddComobo(iTarget.HitCombo);
     }
     private void OnCatchFallTarget(TargetBase targetBase)
     {
         TargetStackInfo.AddPoint(targetBase.CatchStackCount);
         MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(TargetStackInfo);
+    }
+    private void StartCountDown()
+    {
+        var endTime = DateTime.UtcNow.AddSeconds(GameConstant.MatchTime);
+        double unixTimeMs = new DateTimeOffset(endTime).ToUnixTimeMilliseconds();
+        _matchEndAt = DateTimeOffset.FromUnixTimeMilliseconds((long)unixTimeMs).UtcDateTime;
+
+        MatchEventDispatcher.Instance.OnUpdateTimeLeftSubject.OnNext(GameConstant.MatchTime);
+
+        if (_countdownSubscription == null)
+        {
+            _countdownSubscription = Observable.Interval(System.TimeSpan.FromSeconds(1))
+                .TakeWhile(_ => DateTime.UtcNow < _matchEndAt)
+                .Subscribe(
+                    onNext: _ =>
+                    {
+                        var remainSeconds = (int)(_matchEndAt - DateTime.UtcNow).TotalSeconds;
+                        MatchEventDispatcher.Instance.OnUpdateTimeLeftSubject.OnNext(remainSeconds);
+                    },
+                    onCompleted: _ =>
+                    {
+                        MatchEventDispatcher.Instance.OnUpdateTimeLeftSubject.OnNext(0);
+                        OnMatchEnd();
+                    });
+        }
+        else
+        {
+            throw new InvalidOperationException("前のCountDownが終了していない");
+        }
+    }
+    private void OnMatchEnd()
+    {
+        _matchResult = PlayerScore.CurrentScore;
+        _countdownSubscription?.Dispose();
+        _countdownSubscription = null;
+        ModelCache.Match.OnMatchFinished(_matchResult);
     }
     #region IMatchの公開機能
     public bool HasTargetStack => TargetStackInfo != null && TargetStackInfo.CurrentPoint > 0;
@@ -91,15 +135,7 @@ public class MatchController : MonoBehaviour, IMatch
     }
     public void OnFire()
     {
-        PlayerScore.DecreaseOne();
-
-        var scoreInfo = new ScoreInfo()
-        {
-            Diff = -GameConstant.FireCost,
-            AfterScore = PlayerScore.CurrentScore,
-        };
-
-        MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
+        ApplyScore(-GameConstant.FireCost);
     }
     public void OnUpdateScoreCombo(int CurrentCombo)
     {
@@ -107,6 +143,17 @@ public class MatchController : MonoBehaviour, IMatch
     }
     public void OnReceiveScoreComboPoint(int score)
     {
+        ApplyScore(score);
+    }
+    #endregion
+
+    private void ApplyScore(int score)
+    {
+        if (HasResult)
+        {
+            return;
+        }
+
         PlayerScore.Apply(score);
 
         var scoreInfo = new ScoreInfo()
@@ -117,5 +164,4 @@ public class MatchController : MonoBehaviour, IMatch
 
         MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
     }
-    #endregion
 }
