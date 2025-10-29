@@ -73,7 +73,8 @@ public class MatchController : MonoBehaviour, IMatch
     }
     public void Update()
     {
-        Field.OnUpdate();
+        if (!HasResult)
+            Field.OnUpdate();
     }
     private void OnBulletHitTarget(ITarget iTarget)
     {
