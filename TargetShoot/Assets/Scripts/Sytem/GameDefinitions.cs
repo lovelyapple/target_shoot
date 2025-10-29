@@ -35,7 +35,9 @@ namespace GameDefinition
         public const int DefaultScore = 50;
         public const float TargetReviveInterval = 2f;
         public const int BulletComboBonusScoreTimes = 2;
+        public const int ScoreComboOnCatchTargetStep = 2;
 
         public const int ComboLastSec = 3;
+        public const int HighScoreTargetScore = 0;
     }
 }
