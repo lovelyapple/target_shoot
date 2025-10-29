@@ -16,24 +16,21 @@ public class MatchRunner : MonoBehaviour
 
     private IDisposable _countdownSubscription;
     private DateTime _matchEndAt;
-
+    private bool HasResult => Match != null && Match.HasResult;
     private void Awake()
     {
-        PlayerScore = new PlayerScoreInfo();
-        TargetStackInfo = new TargetStackInfo();
-
         MatchEventDispatcher.Instance.OnDispatchBulletHitObservable()
-        .Where(_ => !Match.HasResult)
+        .Where(_ => !HasResult)
         .Subscribe(target => OnBulletHitTarget(target))
         .AddTo(this);
 
         MatchEventDispatcher.Instance.OnDispatchCatchTargetObservable()
-        .Where(_ => !Match.HasResult)
+        .Where(_ => !HasResult)
         .Subscribe(target => OnCatchFallTarget(target))
         .AddTo(this);
 
         MatchEventDispatcher.Instance.OnBulletMissedAllObservable()
-        .Where(_ => !Match.HasResult)
+        .Where(_ => !HasResult)
         .Subscribe(_ => ScoreComboManager?.OnBulletMissedAll())
         .AddTo(this);
     }
@@ -56,18 +53,22 @@ public class MatchRunner : MonoBehaviour
         Match = new ArcadeMatch();
         Match.Init(PlayerScore, TargetStackInfo);
 
+        PlayerScore = new PlayerScoreInfo();
+        TargetStackInfo = new TargetStackInfo();
+
         Field.Initialize(Match);
         Player.Initialize(Match);
 
         ScoreComboManager = new ScoreComboManager(Match);
 
+        // 必要なUI初期化
         Match.ApplyScore(0);
         PlayerScore.Apply(GameConstant.DefaultScore);
     }
 
     public void Update()
     {
-        if (!Match.HasResult)
+        if (!HasResult)
             Field.OnUpdate();
     }
     private void OnBulletHitTarget(ITarget iTarget)
