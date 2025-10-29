@@ -37,7 +37,7 @@ public class ScoreComboManager
         double unixTimeMs = new DateTimeOffset(endTime).ToUnixTimeMilliseconds();
         ComboEndAt = DateTimeOffset.FromUnixTimeMilliseconds((long)unixTimeMs).UtcDateTime;
 
-        _match.OnUpdateScoreCombo(ScoreCombo.CurrentCombo);
+        MatchEventDispatcher.Instance.OnScoreComboUpdateSubject.OnNext(ScoreCombo.CurrentCombo);
 
         if (_countdownSubscription == null)
         {
@@ -56,9 +56,10 @@ public class ScoreComboManager
     }
     private void ComboTimeOut()
     {
-        _match.OnReceiveScoreComboPoint(ScoreCombo.GetScore());
+        var score = ScoreCombo.GetScoreOnTimeOut();
         ScoreCombo.OnReset();
-        _match.OnUpdateScoreCombo(ScoreCombo.CurrentCombo);
+        _match.OnReceiveScoreComboPoint(score);
+        MatchEventDispatcher.Instance.OnScoreComboUpdateSubject.OnNext(ScoreCombo.CurrentCombo);
         FinishCountDown();
     }
     public void OnBulletMissedAll()

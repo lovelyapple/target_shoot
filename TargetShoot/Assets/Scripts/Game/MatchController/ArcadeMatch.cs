@@ -1,20 +1,21 @@
 using GameDefinition;
-using UnityEngine;
-using R3;
-using System;
+
 
 public class ArcadeMatch : IMatch
 {
-    #region IMatchの公開機能
     public PlayerScoreInfo PlayerScore { get; private set; }
     public TargetStackInfo TargetStackInfo { get; private set; }
+    public ScoreComboManager ScoreComboManager { get; private set; }
     private int? _matchResult;
     public bool HasResult => _matchResult.HasValue;
     public bool HasTargetStack => TargetStackInfo != null && TargetStackInfo.CurrentPoint > 0;
-    public void Init(PlayerScoreInfo playerScoreInfo, TargetStackInfo targetStackInfo)
+    public void Init(PlayerScoreInfo playerScoreInfo,
+        TargetStackInfo targetStackInfo,
+        ScoreComboManager scoreComboManager)
     {
         PlayerScore = playerScoreInfo;
         TargetStackInfo = targetStackInfo;
+        ScoreComboManager = scoreComboManager;
     }
     public void OnRespawnOneTarget()
     {
@@ -33,15 +34,28 @@ public class ArcadeMatch : IMatch
     }
     public void OnFire()
     {
-        ApplyScore(-GameConstant.FireCost);
+        // アーケードモードでは発砲は消費しない
+        //ApplyScore(-GameConstant.FireCost);
     }
-    public void OnUpdateScoreCombo(int CurrentCombo)
+    public void OnBulletHitTarget(ITarget iTarget)
     {
-        MatchEventDispatcher.Instance.OnScoreComboUpdateSubject.OnNext(CurrentCombo);
+        var comboBonus = GameConstant.GetComboTimes(iTarget.HitCombo);
+        var applyScore = (int)(iTarget.Score * comboBonus);
+        ApplyScore(applyScore);
+        ScoreComboManager.AddComobo(iTarget.HitCombo);
+    }
+    public void OnCatchFallTarget(ITarget iTarget)
+    {
+        TargetStackInfo.AddPoint(iTarget.CatchStackCount);
+        MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(TargetStackInfo);
+
+        if (iTarget.IsFrameTarget)
+            ScoreComboManager.AddComobo(GameConstant.ScoreComboOnCatchTargetStep);
     }
     public void OnReceiveScoreComboPoint(int score)
     {
-        ApplyScore(score);
+        // アーケードモードではスコアコンボがTimeOutする際のボーナスはない
+        // ApplyScore(score);
     }
     public void ApplyScore(int score)
     {
@@ -53,10 +67,7 @@ public class ArcadeMatch : IMatch
         PlayerScore.Apply(score);
 
         // アーケードは0以下にはならない
-        // if (ModelCache.Match.IsArcadeMode)
-        {
-            PlayerScore.Clamp0();
-        }
+        PlayerScore.Clamp0();
 
         var scoreInfo = new ScoreInfo()
         {
@@ -76,5 +87,4 @@ public class ArcadeMatch : IMatch
     {
         _matchResult = result;
     }
-    #endregion
 }

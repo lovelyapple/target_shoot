@@ -51,15 +51,15 @@ public class MatchRunner : MonoBehaviour
     public void Init()
     {
         _match = new ArcadeMatch();
-        _match.Init(_playerScore, _targetStackInfo);
 
         _playerScore = new PlayerScoreInfo();
         _targetStackInfo = new TargetStackInfo();
+        _scoreComboManager = new ScoreComboManager(_match);
+
+        _match.Init(_playerScore, _targetStackInfo, _scoreComboManager);
 
         Field.Initialize(_match);
         Player.Initialize(_match);
-
-        _scoreComboManager = new ScoreComboManager(_match);
 
         // 必要なUI初期化
         _match.ApplyScore(GameConstant.DefaultScore);
@@ -73,18 +73,11 @@ public class MatchRunner : MonoBehaviour
     }
     private void OnBulletHitTarget(ITarget iTarget)
     {
-        var comboBonus = GameConstant.GetComboTimes(iTarget.HitCombo);
-        var applyScore = (int)(iTarget.Score * comboBonus);
-        _match.ApplyScore(applyScore);
-        _scoreComboManager.AddComobo(iTarget.HitCombo);
+        _match.OnBulletHitTarget(iTarget);
     }
-    private void OnCatchFallTarget(TargetBase targetBase)
+    private void OnCatchFallTarget(ITarget iTarget)
     {
-        _targetStackInfo.AddPoint(targetBase.CatchStackCount);
-        MatchEventDispatcher.Instance.StackUpdateSubject.OnNext(_targetStackInfo);
-
-        if (targetBase.IsFrameTarget)
-            _scoreComboManager.AddComobo(GameConstant.ScoreComboOnCatchTargetStep);
+        _match.OnCatchFallTarget(iTarget);
     }
     private void StartCountDown()
     {
