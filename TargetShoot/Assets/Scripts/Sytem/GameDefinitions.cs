@@ -45,7 +45,7 @@ namespace GameDefinition
         public const int BulletComboBonusScoreTimes = 2;
         public const int ScoreComboOnCatchTargetStep = 2;
 
-        public const int ComboLastSec = 3;
+        public const int ComboLastSec = 4;
         public static float GetBulletComboTimes(int combo)
         {
             if(combo >= 2)
