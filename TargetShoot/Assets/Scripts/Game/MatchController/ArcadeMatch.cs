@@ -39,10 +39,11 @@ public class ArcadeMatch : IMatch
     }
     public void OnBulletHitTarget(ITarget iTarget)
     {
-        var comboBonus = GameConstant.GetComboTimes(iTarget.HitCombo);
-        var applyScore = (int)(iTarget.Score * comboBonus);
-        ApplyScore(applyScore);
         ScoreComboManager.AddComobo(iTarget.HitCombo);
+        var bulletComboBonus = GameConstant.GetBulletComboTimes(iTarget.HitCombo);
+        var scoreComboBonus = GameConstant.GetScoreComboTimes(ScoreComboManager.ScoreCombo.CurrentCombo);
+        var applyScore = (int)(iTarget.Score * scoreComboBonus * bulletComboBonus);
+        ApplyScore(applyScore, iTarget);
     }
     public void OnCatchFallTarget(ITarget iTarget)
     {
@@ -57,7 +58,7 @@ public class ArcadeMatch : IMatch
         // アーケードモードではスコアコンボがTimeOutする際のボーナスはない
         // ApplyScore(score);
     }
-    public void ApplyScore(int score)
+    public void ApplyScore(int score, ITarget target = null)
     {
         if (HasResult)
         {
@@ -74,6 +75,11 @@ public class ArcadeMatch : IMatch
             Diff = score,
             AfterScore = PlayerScore.CurrentScore,
         };
+
+        if(target != null)
+        {
+            scoreInfo.TargetHitPos = target.HitWorldPosition;
+        }
 
         MatchEventDispatcher.Instance.ScoreUpdateSubject.OnNext(scoreInfo);
 

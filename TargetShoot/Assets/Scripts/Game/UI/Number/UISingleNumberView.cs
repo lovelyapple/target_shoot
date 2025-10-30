@@ -9,5 +9,8 @@ public class UISingleNumberView : MonoBehaviour
     {
         BackGroundImage.sprite = backGround;
         NumberImage.sprite = number;
+
+        BackGroundImage.gameObject.SetActive(true);
+        NumberImage.gameObject.SetActive(true);
     }
 }

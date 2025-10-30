@@ -46,8 +46,20 @@ namespace GameDefinition
         public const int ScoreComboOnCatchTargetStep = 2;
 
         public const int ComboLastSec = 3;
+        public static float GetBulletComboTimes(int combo)
+        {
+            if(combo >= 2)
+            {
+                return 2f;
+            }
+            else if(combo >= 1)
+            {
+                return 1.5f;
+            }
 
-        public static float GetComboTimes(int combo)
+            return 1;
+        }
+        public static float GetScoreComboTimes(int combo)
         {
             if(combo >= 10)
             {

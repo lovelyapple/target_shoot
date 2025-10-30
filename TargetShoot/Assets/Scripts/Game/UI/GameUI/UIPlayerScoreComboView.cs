@@ -24,6 +24,6 @@ public class UIPlayerScoreComboView : MonoBehaviour
         ComboText.gameObject.SetActive(true);
         ComboTimesText.gameObject.SetActive(true);
         ComboText.text = combo.ToString("00");
-        ComboTimesText.text = GameConstant.GetComboTimes(combo).ToString("0.00");
+        ComboTimesText.text = GameConstant.GetScoreComboTimes(combo).ToString("0.00");
     }
 }

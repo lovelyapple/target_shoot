@@ -13,6 +13,6 @@ public interface IMatch
     public void OnCatchFallTarget(ITarget iTarget);
     public void OnRespawnOneTarget();
     public void OnReceiveScoreComboPoint(int score);
-    public void ApplyScore(int score);
+    public void ApplyScore(int score, ITarget iTarget = null);
     public void SetupResult(int result);
 }
