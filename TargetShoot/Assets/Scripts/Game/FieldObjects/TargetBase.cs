@@ -8,6 +8,7 @@ public interface ITarget
     public int CatchStackCount { get; }
     public int HitCombo { get; }
     public bool IsFrameTarget { get; }
+    public Vector3 HitWorldPosition{ get; set; }
 }
 
 public abstract class TargetBase : MonoBehaviour, ITarget
@@ -19,6 +20,7 @@ public abstract class TargetBase : MonoBehaviour, ITarget
     public abstract FieldTargetType TargetType { get; }
     public int Score => ScoreSetting;
     public int CatchStackCount => CatchStackCountSetting;
+    public Vector3 HitWorldPosition { get; set; }
     private bool _isTarget = false;
     public bool IsFrameTarget => _isTarget;
     public int HitCombo { get; private set; } = 0;
@@ -43,9 +45,10 @@ public abstract class TargetBase : MonoBehaviour, ITarget
             Destroy(gameObject);
         }
     }
-    public void OnHit(int currentCombo)
+    public void OnHit(int currentCombo, Vector3 hitWorldPosition)
     {
         HitCombo = currentCombo;
+        HitWorldPosition = hitWorldPosition;
 
         _onBulletHit.OnNext(this);
         _onBulletHit.OnCompleted();
