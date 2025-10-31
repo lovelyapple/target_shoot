@@ -544,6 +544,17 @@ MonoBehaviour:
   - {fileID: 887569327, guid: 78a2d6fdd69651e4cba6a3375005e8d2, type: 3}
   - {fileID: -1233756855, guid: 78a2d6fdd69651e4cba6a3375005e8d2, type: 3}
   - {fileID: -2092445036, guid: 78a2d6fdd69651e4cba6a3375005e8d2, type: 3}
+  AlertNumberImages:
+  - {fileID: -1237889115, guid: 436a864d41e01a34fa70548cfd39b7f1, type: 3}
+  - {fileID: 2133666200, guid: 436a864d41e01a34fa70548cfd39b7f1, type: 3}
+  - {fileID: 830526923, guid: 436a864d41e01a34fa70548cfd39b7f1, type: 3}
+  - {fileID: -1009851595, guid: 436a864d41e01a34fa70548cfd39b7f1, type: 3}
+  - {fileID: 1732552920, guid: 436a864d41e01a34fa70548cfd39b7f1, type: 3}
+  - {fileID: -1676567053, guid: 436a864d41e01a34fa70548cfd39b7f1, type: 3}
+  - {fileID: 89759229, guid: 436a864d41e01a34fa70548cfd39b7f1, type: 3}
+  - {fileID: 486612869, guid: 436a864d41e01a34fa70548cfd39b7f1, type: 3}
+  - {fileID: 1300108200, guid: 436a864d41e01a34fa70548cfd39b7f1, type: 3}
+  - {fileID: -1784551896, guid: 436a864d41e01a34fa70548cfd39b7f1, type: 3}
   Numbers:
   - {fileID: 2988978653492104052}
   - {fileID: 373059477660939154}
