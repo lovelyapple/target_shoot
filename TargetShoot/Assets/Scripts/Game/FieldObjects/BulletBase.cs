@@ -2,7 +2,6 @@ using System.Linq;
 using GameDefinition;
 using R3;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class BulletBase : MonoBehaviour
 {
@@ -42,7 +41,7 @@ public class BulletBase : MonoBehaviour
                 if (target != null)
                 {
                     ComboInfo.AddCombo();
-                    target.OnHit(ComboInfo.CurrentCombo);
+                    target.OnHit(ComboInfo.CurrentCombo, hit.point);
                 }
             }
 

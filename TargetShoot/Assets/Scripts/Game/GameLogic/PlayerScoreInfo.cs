@@ -4,6 +4,7 @@ public class ScoreInfo
 {
     public int AfterScore;
     public int Diff;
+    public Vector3 TargetHitPos;
 }
 public class PlayerScoreInfo
 {
