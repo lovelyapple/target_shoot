@@ -16,7 +16,7 @@ public class UIEffectPlayerController : MonoBehaviour
 
     private void PlayTargetHitScoreEffect(ScoreInfo scoreInfo)
     {
-        if(scoreInfo.Diff <= 0 || scoreInfo.TargetHitPos == Vector3.zero)
+        if(scoreInfo.TargetHitPos == Vector3.zero)
         {
             return;
         }

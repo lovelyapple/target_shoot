@@ -1,15 +1,20 @@
+using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class UINumberView : MonoBehaviour
 {
     [SerializeField] List<Sprite> BackGroundImages;
     [SerializeField] List<Sprite> NumberImages;
+    [SerializeField] List<Sprite> AlertNumberImages;
     [SerializeField] List<UISingleNumberView> Numbers;
+    [SerializeField] private List<HorizontalLayoutGroup> Grids;
+    [SerializeField] private GameObject MinusObj;
     [SerializeField] int Number;
     private const float VerticalBias = 0.2f;
+    private const float AlertGridSpacing = -50f;
     [ContextMenu("Exe")]
     public void Set()
     {
@@ -19,7 +24,20 @@ public class UINumberView : MonoBehaviour
     private Vector3 _direction;
     public void SetNumber(int number)
     {
+        var numberSprites = number > 0 ? NumberImages : AlertNumberImages;
+        MinusObj.SetActive(number < 0);
+
+        if (number < 0)
+        {
+            foreach (var grid in Grids)
+            {
+                grid.spacing = AlertGridSpacing;
+            }
+        }
+        
+        number = Math.Abs(number);
         string numStr = number.ToString("D4"); // 4桁固定（例：0045）
+
 
         for (int i = 0; i < Numbers.Count; i++)
         {
@@ -28,7 +46,7 @@ public class UINumberView : MonoBehaviour
             if (i < numStr.Length)
             {
                 var backGroundImage = BackGroundImages[index];
-                var numberImage = NumberImages[index];
+                var numberImage = numberSprites[index];
                 Numbers[i].Setup(backGroundImage, numberImage);
             }
         }
