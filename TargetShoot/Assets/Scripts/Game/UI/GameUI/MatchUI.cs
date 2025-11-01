@@ -3,6 +3,7 @@ using R3;
 public class MatchUI : MonoBehaviour
 {
     [SerializeField] private UIPlayerScoreView ScoreView;
+    [SerializeField] private UIBulletView BulletView;   
 
     private void Awake()
     {

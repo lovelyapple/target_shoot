@@ -42,7 +42,6 @@ namespace GameDefinition
         public const int FireCost = 1;
         public const int DefaultScore = 100;
         public const float TargetReviveInterval = 2f;
-        public const int BulletComboBonusScoreTimes = 2;
         public const int ScoreComboOnCatchTargetStep = 2;
 
         public const int ComboLastSec = 4;
